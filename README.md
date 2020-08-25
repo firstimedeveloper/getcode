@@ -6,6 +6,10 @@ I created this because I used a lot of articles/tutorials to set up things (a di
 
 Using this tool will allow me to retrieve the code found in said articles so that I can use the code more easily for things I don't have in my long term memory.
 
+## Todo
+Be able to view the retrieved code in a more readable format. (currently the list of strings returned from the api doesn't remove the tags)
+- perhaps this can be done using the html/template library.
+
 ## 
 To use the api, enter the following in your terminal.
 ```bash
