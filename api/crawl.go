@@ -15,16 +15,11 @@ import (
 // from which the user wishes to retrieve.
 func NewArticle(tag, url string) ([]string, error) {
 	var article Article
-	resp, err := http.Get("https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04")
+	str, err := respToStr(url)
 	if err != nil {
 		return nil, err
 	}
-	parsedBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	doc, err := html.Parse(strings.NewReader(string(parsedBody)))
-	err = article.Body(doc, tag)
+	err = article.parseHTML(str, tag)
 	if err != nil {
 		return nil, err
 	}
@@ -36,8 +31,32 @@ type Article struct {
 	Lines []string `xml:"code"`
 }
 
+func respToStr(url string) (string, error) {
+	resp, err := http.Get("https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04")
+	if err != nil {
+		return "", err
+	}
+	parsedBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(parsedBody), nil
+}
+
+func node(body string) (*html.Node, error) {
+	doc, err := html.Parse(strings.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
+
 // Body retrieves the html nodes, converts them to strings
-func (a *Article) Body(doc *html.Node, tag string) error {
+func (a *Article) parseHTML(s string, tag string) error {
+	doc, err := node(s)
+	if err != nil {
+		return err
+	}
 	var body []*html.Node
 	var crawler func(*html.Node)
 	crawler = func(node *html.Node) {
