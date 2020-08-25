@@ -9,7 +9,7 @@ import (
 
 func main() {
 	url := "https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04"
-	list, err := api.NewArticle("code", url)
+	list, err := api.NewArticle("pre", url)
 	if err != nil {
 		log.Println(err)
 		return
